@@ -3,7 +3,7 @@ const router = express.Router()
 const pool = require('../db')
 
 router.post('/save', async (req, res) => {
-  const { openid, profile } = req.body
+  const { openid, profile, aiProvider } = req.body
   if (!openid || !profile) return res.status(400).json({ error: 'invalid params' })
 
   try {
@@ -36,6 +36,16 @@ router.post('/save', async (req, res) => {
         profile.restrictions
       ]
     )
+
+    if (aiProvider) {
+      await pool.query(
+        `INSERT INTO users (openid, ai_provider)
+         VALUES (?, ?)
+         ON DUPLICATE KEY UPDATE ai_provider=?`,
+        [openid, aiProvider, aiProvider]
+      )
+    }
+
     res.json({ success: true })
   } catch (e) {
     res.status(500).json({ error: 'db error' })
