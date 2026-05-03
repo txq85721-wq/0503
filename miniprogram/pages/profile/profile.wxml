@@ -1,0 +1,19 @@
+<view class="container">
+  <view class="card">
+    <view class="title">健康档案</view>
+
+    <view class="label">身高 (cm)</view>
+    <input class="input" data-field="height" bindinput="onInput" value="{{height}}" />
+
+    <view class="label">体重 (kg)</view>
+    <input class="input" data-field="weight" bindinput="onInput" value="{{weight}}" />
+
+    <view class="label">目标</view>
+    <input class="input" data-field="goal" bindinput="onInput" value="{{goal}}" placeholder="减脂/控糖" />
+
+    <view class="label">饮食偏好</view>
+    <input class="input" data-field="preference" bindinput="onInput" value="{{preference}}" />
+
+    <button class="btn" bindtap="saveProfile">保存</button>
+  </view>
+</view>
