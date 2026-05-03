@@ -1,0 +1,53 @@
+.page-record {
+  background: linear-gradient(180deg, #eef5ff 0%, #f7f9fc 60%, #f5f7fa 100%);
+}
+
+.record-hero {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.metric-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 20rpx;
+  text-align: center;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.05);
+}
+
+.metric-value {
+  font-size: 40rpx;
+  font-weight: bold;
+}
+
+.record-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 16rpx 0;
+  border-bottom: 1px solid #eee;
+}
+
+.record-name {
+  font-weight: bold;
+}
+
+.record-meta {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.record-calories {
+  font-weight: bold;
+}
+
+.empty-state {
+  text-align: center;
+  color: #999;
+  padding: 40rpx 0;
+}
