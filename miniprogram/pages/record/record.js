@@ -1,7 +1,9 @@
+const { calculateNutrition } = require('../../utils/foodDB')
+
 Page({
   data: {
     foodName: '',
-    calories: '',
+    grams: '',
     records: [],
     totalCalories: 0
   },
@@ -12,15 +14,23 @@ Page({
   },
 
   addRecord() {
-    const { foodName, calories, records } = this.data
-    if (!foodName || !calories) {
+    const { foodName, grams, records } = this.data
+    if (!foodName || !grams) {
       wx.showToast({ title: '请输入完整', icon: 'none' })
+      return
+    }
+
+    const nutrition = calculateNutrition(foodName, Number(grams))
+
+    if (!nutrition) {
+      wx.showToast({ title: '食物不在数据库', icon: 'none' })
       return
     }
 
     const newRecord = {
       foodName,
-      calories: Number(calories)
+      grams,
+      calories: nutrition.calories
     }
 
     const newRecords = [...records, newRecord]
@@ -30,7 +40,7 @@ Page({
       records: newRecords,
       totalCalories,
       foodName: '',
-      calories: ''
+      grams: ''
     })
 
     wx.setStorageSync('records', newRecords)
