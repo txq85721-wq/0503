@@ -1,42 +1,33 @@
 const axios = require('axios')
+const { extractJson } = require('../utils/aiJson')
 require('dotenv').config()
+
+const API_URL = process.env.AI_API_URL
+const API_KEY = process.env.AI_API_KEY
+const MODEL = process.env.AI_MODEL
 
 async function generateDailyInsight(data) {
   const { totalCalories, targetCalories, totalProtein } = data
 
-  const prompt = `
-你是一个健康饮食AI。
-用户今日数据：
-- 摄入热量：${totalCalories}
-- 目标热量：${targetCalories}
-- 蛋白质：${totalProtein}
-
-请输出JSON：
-{
-  "summary": "一句总结",
-  "dinner_suggestion": "晚餐建议"
-}
-`
+  const prompt = `用户今日热量${totalCalories}，目标${targetCalories}，蛋白质${totalProtein}，给总结和晚餐建议(JSON)`
 
   const res = await axios.post(
-    process.env.DEEPSEEK_API_URL,
+    API_URL,
     {
-      model: process.env.DEEPSEEK_MODEL,
+      model: MODEL,
       messages: [{ role: 'user', content: prompt }]
     },
     {
-      headers: {
-        Authorization: `Bearer ${process.env.DEEPSEEK_API_KEY}`
-      }
+      headers: { Authorization: `Bearer ${API_KEY}` }
     }
   )
 
-  const content = res.data.choices[0].message.content
+  const content = res.data.choices?.[0]?.message?.content
+  const json = extractJson(content)
 
-  try {
-    return JSON.parse(content)
-  } catch {
-    return { summary: '今天饮食还不错，继续保持。', dinner_suggestion: '建议晚餐清淡。' }
+  return json || {
+    summary: '今日数据正常',
+    dinner_suggestion: '清淡饮食'
   }
 }
 
