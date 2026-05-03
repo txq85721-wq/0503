@@ -1,22 +1,32 @@
+const { request } = require('../../utils/request')
+
 Page({
   data: {
-    plan: null
+    plan: null,
+    loading: false
   },
 
-  generatePlan() {
+  async generatePlan() {
     const profile = wx.getStorageSync('profile')
     if (!profile) {
       wx.showToast({ title: '请先填写档案', icon: 'none' })
       return
     }
 
-    // mock AI
-    const plan = {
-      breakfast: '鸡蛋 + 燕麦',
-      lunch: '鸡胸肉 + 米饭 + 蔬菜',
-      dinner: '鱼 + 沙拉'
-    }
+    this.setData({ loading: true })
 
-    this.setData({ plan })
+    try {
+      const result = await request({
+        url: '/recommend',
+        method: 'POST',
+        data: profile
+      })
+
+      this.setData({ plan: result })
+    } catch (err) {
+      wx.showToast({ title: '请求失败', icon: 'none' })
+    } finally {
+      this.setData({ loading: false })
+    }
   }
 })
