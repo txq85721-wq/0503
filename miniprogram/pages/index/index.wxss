@@ -1,0 +1,59 @@
+.page-index {
+  background: linear-gradient(180deg, #eef5ff 0%, #f7f9fc 60%, #f5f7fa 100%);
+}
+
+.hero-card {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 24rpx;
+  padding: 30rpx;
+  color: #fff;
+  margin-bottom: 20rpx;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.metric-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 20rpx;
+  text-align: center;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.05);
+}
+
+.metric-value {
+  font-size: 40rpx;
+  font-weight: bold;
+}
+
+.card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.05);
+}
+
+.section-title {
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.tip {
+  color: #666;
+}
+
+.btn {
+  background: #4caf50;
+  color: #fff;
+  margin-top: 10rpx;
+}
+
+.btn-secondary {
+  background: #eee;
+  margin-top: 10rpx;
+}
