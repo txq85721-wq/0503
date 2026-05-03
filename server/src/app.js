@@ -5,6 +5,7 @@ require('dotenv').config()
 const recommendRoute = require('./routes/recommend')
 const authRoute = require('./routes/auth')
 const reminderRoute = require('./routes/reminder')
+const insightRoute = require('./routes/insight')
 const { startReminderJob } = require('./services/reminderService')
 
 const app = express()
@@ -18,6 +19,7 @@ app.get('/', (req, res) => {
 app.use('/api/recommend', recommendRoute)
 app.use('/api/auth', authRoute)
 app.use('/api/reminder', reminderRoute)
+app.use('/api/insight', insightRoute)
 
 startReminderJob()
 
