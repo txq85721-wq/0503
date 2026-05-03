@@ -23,6 +23,7 @@ Page({
       })
 
       this.setData({ plan: result })
+      wx.setStorageSync('latestPlan', result)
     } catch (err) {
       wx.showToast({ title: '请求失败', icon: 'none' })
     } finally {
