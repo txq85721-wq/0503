@@ -1,4 +1,4 @@
-const { getCheckin } = require('../../utils/checkin')
+const { getCheckin, formatDate } = require('../../utils/checkin')
 
 Page({
   data: {
@@ -12,7 +12,11 @@ Page({
     checkinText: '今日未打卡',
     aiSummary: '',
     dinnerSuggestion: '',
-    insightLoading: false
+    insightLoading: false,
+    calorieChart: [],
+    proteinChart: [],
+    maxCalories: 1800,
+    proteinTarget: 100
   },
 
   onLoad() {
@@ -34,6 +38,9 @@ Page({
     const remainingCalories = targetCalories - todayCalories
     const progressPercent = Math.min(Math.round((todayCalories / targetCalories) * 100), 100)
 
+    const proteinTarget = plan.nutrition_targets?.protein_g || 100
+    const chartData = this.buildCharts(records, targetCalories, proteinTarget)
+
     const advice = remainingCalories > 0
       ? '可以适量补充蛋白质和低糖食物，继续保持少糖饮食。'
       : '已超过建议摄入，今天剩余时间建议减少高热量和高糖食物。'
@@ -46,8 +53,43 @@ Page({
       advice,
       streak: checkin.streak || 0,
       checkedToday: checkin.checkedToday,
-      checkinText: checkin.checkedToday ? '今日已打卡' : '今日未打卡'
+      checkinText: checkin.checkedToday ? '今日已打卡' : '今日未打卡',
+      proteinTarget,
+      ...chartData
     })
+  },
+
+  buildCharts(records, targetCalories, proteinTarget) {
+    const days = []
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(Date.now() - i * 24 * 60 * 60 * 1000)
+      const key = formatDate(date)
+      const label = i === 0 ? '今天' : `${date.getMonth() + 1}/${date.getDate()}`
+      days.push({ key, label, calories: 0, protein: 0 })
+    }
+
+    records.forEach(record => {
+      const dateKey = record.createdAt ? record.createdAt.slice(0, 10) : formatDate()
+      const day = days.find(d => d.key === dateKey)
+      if (!day) return
+      day.calories += Number(record.calories || 0)
+      day.protein += Number(record.protein || 0)
+    })
+
+    const maxCalories = Math.max(targetCalories, ...days.map(d => d.calories), 1)
+
+    return {
+      maxCalories,
+      calorieChart: days.map(d => ({
+        ...d,
+        barHeight: Math.max(Math.round((d.calories / maxCalories) * 180), d.calories > 0 ? 12 : 4),
+        percent: Math.min(Math.round((d.calories / targetCalories) * 100), 120)
+      })),
+      proteinChart: days.map(d => ({
+        ...d,
+        percent: Math.min(Math.round((d.protein / proteinTarget) * 100), 100)
+      }))
+    }
   },
 
   loadAIInsight() {
