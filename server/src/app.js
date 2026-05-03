@@ -6,6 +6,7 @@ const recommendRoute = require('./routes/recommend')
 const authRoute = require('./routes/auth')
 const reminderRoute = require('./routes/reminder')
 const insightRoute = require('./routes/insight')
+const prepRoute = require('./routes/prep')
 const { startReminderJob } = require('./services/reminderService')
 
 const app = express()
@@ -20,6 +21,7 @@ app.use('/api/recommend', recommendRoute)
 app.use('/api/auth', authRoute)
 app.use('/api/reminder', reminderRoute)
 app.use('/api/insight', insightRoute)
+app.use('/api/prep', prepRoute)
 
 startReminderJob()
 
