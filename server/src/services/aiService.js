@@ -1,19 +1,16 @@
-const axios = require('axios')
-require('dotenv').config()
+const { chatJson } = require('./textAiService')
+const { extractJson } = require('../utils/aiJson')
 
 const USE_REAL_AI = true
-const DEEPSEEK_API_URL = process.env.AI_API_URL || 'https://api.deepseek.com/v1/chat/completions'
-const DEEPSEEK_MODEL = process.env.AI_MODEL || 'deepseek-v4-flash'
 
 async function generatePlan(profile) {
-  if (!USE_REAL_AI || !process.env.AI_API_KEY) {
+  if (!USE_REAL_AI) {
     return mockPlan(profile)
   }
 
-  const response = await axios.post(
-    DEEPSEEK_API_URL,
-    {
-      model: DEEPSEEK_MODEL,
+  try {
+    const content = await chatJson({
+      provider: profile.aiProvider,
       messages: [
         {
           role: 'system',
@@ -25,19 +22,14 @@ async function generatePlan(profile) {
         }
       ],
       temperature: 0.35,
-      response_format: { type: 'json_object' }
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.AI_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
       timeout: 60000
-    }
-  )
+    })
 
-  const content = response.data.choices?.[0]?.message?.content
-  return normalizePlan(JSON.parse(content))
+    const json = extractJson(content)
+    return normalizePlan(json || mockPlan(profile))
+  } catch (e) {
+    return mockPlan(profile)
+  }
 }
 
 function buildSystemPrompt() {
@@ -186,7 +178,7 @@ function mockPlan(profile) {
   return {
     plan_type: isFamily ? 'family_weekly_menu' : 'personal_weekly_menu',
     target: profile.goal || '控糖健康饮食',
-    summary: isFamily ? '家庭模式：一套菜单，全家共享，按成员调整份量。' : '当前为未配置 AI_API_KEY 时的备用计划。',
+    summary: isFamily ? '家庭模式：一套菜单，全家共享，按成员调整份量。' : '当前为未配置 AI Key 时的备用计划。',
     daily_calorie_target: 1800,
     nutrition_targets: {
       protein_g: 100,
