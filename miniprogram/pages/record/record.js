@@ -5,7 +5,8 @@ Page({
     foodName: '',
     grams: '',
     records: [],
-    totalCalories: 0
+    totalCalories: 0,
+    totalProtein: 0
   },
 
   onInput(e) {
@@ -30,15 +31,19 @@ Page({
     const newRecord = {
       foodName,
       grams,
-      calories: nutrition.calories
+      calories: nutrition.calories,
+      protein: nutrition.protein
     }
 
     const newRecords = [...records, newRecord]
+
     const totalCalories = newRecords.reduce((sum, r) => sum + r.calories, 0)
+    const totalProtein = newRecords.reduce((sum, r) => sum + (r.protein || 0), 0)
 
     this.setData({
       records: newRecords,
       totalCalories,
+      totalProtein,
       foodName: '',
       grams: ''
     })
@@ -49,6 +54,8 @@ Page({
   onLoad() {
     const records = wx.getStorageSync('records') || []
     const totalCalories = records.reduce((sum, r) => sum + r.calories, 0)
-    this.setData({ records, totalCalories })
+    const totalProtein = records.reduce((sum, r) => sum + (r.protein || 0), 0)
+
+    this.setData({ records, totalCalories, totalProtein })
   }
 })
