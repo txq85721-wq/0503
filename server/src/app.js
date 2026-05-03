@@ -3,6 +3,7 @@ const cors = require('cors')
 require('dotenv').config()
 
 const recommendRoute = require('./routes/recommend')
+const authRoute = require('./routes/auth')
 
 const app = express()
 app.use(cors())
@@ -13,6 +14,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/recommend', recommendRoute)
+app.use('/api/auth', authRoute)
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
