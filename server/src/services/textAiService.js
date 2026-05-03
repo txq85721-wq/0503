@@ -1,15 +1,31 @@
 const axios = require('axios')
 require('dotenv').config()
 
-function getTextAiConfig() {
-  const provider = (process.env.TEXT_AI_PROVIDER || 'deepseek').toLowerCase()
+function normalizeProvider(provider) {
+  const value = String(provider || process.env.TEXT_AI_PROVIDER || 'deepseek').toLowerCase()
+  if (value === 'chatgpt' || value === 'openai') return 'openai'
+  if (value === 'qwen') return 'qwen'
+  return 'deepseek'
+}
+
+function getTextAiConfig(providerInput) {
+  const provider = normalizeProvider(providerInput)
+
+  if (provider === 'openai') {
+    return {
+      provider,
+      apiUrl: process.env.OPENAI_API_URL || 'https://api.openai.com/v1/chat/completions',
+      apiKey: process.env.OPENAI_API_KEY,
+      model: process.env.OPENAI_MODEL || 'gpt-4o-mini'
+    }
+  }
 
   if (provider === 'qwen') {
     return {
       provider,
       apiUrl: process.env.QWEN_TEXT_API_URL || `${process.env.QWEN_BASE_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1'}/chat/completions`,
       apiKey: process.env.QWEN_API_KEY,
-      model: process.env.QWEN_TEXT_MODEL || process.env.QWEN_MODEL || 'qwen-plus'
+      model: process.env.QWEN_TEXT_MODEL || 'qwen-plus'
     }
   }
 
@@ -21,8 +37,8 @@ function getTextAiConfig() {
   }
 }
 
-async function chatJson({ messages, temperature = 0.35, timeout = 60000 }) {
-  const config = getTextAiConfig()
+async function chatJson({ messages, provider, temperature = 0.35, timeout = 60000 }) {
+  const config = getTextAiConfig(provider)
   if (!config.apiKey) throw new Error(`${config.provider} api key missing`)
 
   const body = {
