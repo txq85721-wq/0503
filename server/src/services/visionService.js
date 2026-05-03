@@ -1,12 +1,12 @@
 const axios = require('axios')
 const fs = require('fs')
+const { extractJson } = require('../utils/aiJson')
 require('dotenv').config()
 
 const BASE_URL = process.env.QWEN_BASE_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1'
 const MODEL = process.env.QWEN_MODEL || 'qwen3-vl-flash'
 
 async function recognizeFood(imagePath) {
-  // 修复：把本地文件转 base64，而不是当 URL
   const base64 = fs.readFileSync(imagePath, 'base64')
 
   const response = await axios.post(
@@ -38,12 +38,9 @@ async function recognizeFood(imagePath) {
   )
 
   const content = response.data.choices?.[0]?.message?.content || ''
+  const json = extractJson(content)
 
-  try {
-    return JSON.parse(content)
-  } catch (e) {
-    return { foods: [] }
-  }
+  return json || { foods: [] }
 }
 
 module.exports = { recognizeFood }
