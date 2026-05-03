@@ -1,18 +1,38 @@
 <view class="container">
-  <view class="card">
+
+  <view class="hero-card">
     <view class="title">今日状态</view>
-    <view>目标热量：{{targetCalories}} kcal</view>
-    <view>已摄入：{{todayCalories}} kcal</view>
-    <view>剩余：{{remainingCalories}} kcal</view>
+    <view class="hero-subtitle">{{checkinText}} · 连续 {{streak}} 天</view>
+
+    <view class="hero-metric-value">{{todayCalories}} kcal</view>
+
+    <view class="progress-track">
+      <view class="progress-fill" style="width: {{progressPercent}}%"></view>
+    </view>
+
+    <view class="hero-subtitle">目标 {{targetCalories}} kcal · 剩余 {{remainingCalories}} kcal</view>
+  </view>
+
+  <view class="dashboard-grid">
+    <view class="metric-card">
+      <view class="metric-label">已摄入</view>
+      <view class="metric-value">{{todayCalories}}</view>
+    </view>
+
+    <view class="metric-card">
+      <view class="metric-label">剩余</view>
+      <view class="metric-value">{{remainingCalories}}</view>
+    </view>
   </view>
 
   <view class="card">
-    <view class="title">AI建议</view>
-    <view>{{advice}}</view>
+    <view class="section-title">AI建议</view>
+    <view class="tip">{{advice}}</view>
   </view>
 
   <view class="card">
-    <button class="btn" open-type="navigate" url="/pages/record/record">去记录饮食</button>
-    <button class="btn" open-type="navigate" url="/pages/recommend/recommend">查看推荐</button>
+    <button class="btn" open-type="switchTab" url="/pages/record/record">记录饮食</button>
+    <button class="btn-secondary" open-type="switchTab" url="/pages/recommend/recommend">查看推荐</button>
   </view>
+
 </view>
