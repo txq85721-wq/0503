@@ -1,0 +1,12 @@
+<view class="container">
+  <view class="card">
+    <view class="title">AI饮食推荐</view>
+    <button class="btn" bindtap="generatePlan">生成今日菜单</button>
+
+    <view wx:if="{{plan}}">
+      <view>早餐：{{plan.breakfast}}</view>
+      <view>午餐：{{plan.lunch}}</view>
+      <view>晚餐：{{plan.dinner}}</view>
+    </view>
+  </view>
+</view>
