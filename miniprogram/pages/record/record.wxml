@@ -1,27 +1,49 @@
-<view class="container">
-  <view class="card">
-    <view class="title">饮食记录</view>
+<view class="container page-record">
+  <view class="hero-card record-hero">
+    <view class="hero-subtitle">LESSugar 饮食记录</view>
+    <view class="title">今天吃了什么？</view>
+    <view class="hero-subtitle">记录饮食后会自动更新热量、蛋白质和打卡状态。</view>
+  </view>
+
+  <view class="dashboard-grid">
+    <view class="metric-card">
+      <view class="metric-label">今日热量</view>
+      <view class="metric-value">{{totalCalories}}</view>
+      <view class="metric-label">kcal</view>
+    </view>
+    <view class="metric-card">
+      <view class="metric-label">蛋白质</view>
+      <view class="metric-value">{{totalProtein}}</view>
+      <view class="metric-label">g</view>
+    </view>
+  </view>
+
+  <view class="card input-card">
+    <view class="section-title">添加一餐</view>
 
     <view class="label">选择食物</view>
     <picker mode="selector" range="{{foodList}}" bindchange="onSelectFood">
-      <view class="input">{{foodName || '点击选择食物'}}</view>
+      <view class="input picker-input">{{foodName || '点击选择常见食物'}}</view>
     </picker>
 
-    <input class="input" placeholder="重量(g)" data-field="grams" bindinput="onInput" value="{{grams}}" />
+    <view class="label">摄入重量</view>
+    <input class="input" placeholder="例如：200" data-field="grams" bindinput="onInput" value="{{grams}}" />
 
-    <button class="btn" bindtap="addRecord">添加记录</button>
+    <button class="btn" loading="{{saving}}" bindtap="addRecord">添加记录</button>
+    <button class="btn-secondary" loading="{{recognizing}}" bindtap="takePhoto">拍照识别</button>
   </view>
 
   <view class="card">
-    <view class="title">今日摄入</view>
-    <view>热量：{{totalCalories}} kcal</view>
-    <view>蛋白质：{{totalProtein}} g</view>
-  </view>
+    <view class="section-title">记录列表</view>
+    <view wx:if="{{loadingRecords}}" class="tip">正在加载记录...</view>
+    <view wx:elif="{{!records.length}}" class="empty-state">还没有记录，先添加一餐吧</view>
 
-  <view class="card">
-    <view class="title">记录列表</view>
-    <view wx:for="{{records}}" wx:key="index">
-      {{item.foodName}} {{item.grams}}g - {{item.calories}} kcal
+    <view wx:for="{{records}}" wx:key="createdAt" class="record-row">
+      <view>
+        <view class="record-name">{{item.foodName}}</view>
+        <view class="record-meta">{{item.grams}}g · {{item.source || 'manual'}}</view>
+      </view>
+      <view class="record-calories">{{item.calories}} kcal</view>
     </view>
   </view>
 </view>
