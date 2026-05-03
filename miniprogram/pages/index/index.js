@@ -16,7 +16,8 @@ Page({
     calorieChart: [],
     proteinChart: [],
     maxCalories: 1800,
-    proteinTarget: 100
+    proteinTarget: 100,
+    shareText: ''
   },
 
   onLoad() {
@@ -26,6 +27,18 @@ Page({
   onShow() {
     this.loadData()
     this.loadAIInsight()
+  },
+
+  onShareAppMessage() {
+    return {
+      title: this.data.shareText || '我正在用 LESSugar 记录少糖饮食',
+      path: '/pages/index/index'
+    }
+  },
+
+  buildShareText(todayCalories, targetCalories, streak) {
+    const status = todayCalories <= targetCalories ? '今日控糖达标' : '今日继续调整'
+    return `LESSugar 打卡：${status}，已摄入 ${todayCalories}/${targetCalories} kcal，连续打卡 ${streak} 天`
   },
 
   loadData() {
@@ -54,6 +67,7 @@ Page({
       streak: checkin.streak || 0,
       checkedToday: checkin.checkedToday,
       checkinText: checkin.checkedToday ? '今日已打卡' : '今日未打卡',
+      shareText: this.buildShareText(todayCalories, targetCalories, checkin.streak || 0),
       proteinTarget,
       ...chartData
     })
@@ -90,6 +104,13 @@ Page({
         percent: Math.min(Math.round((d.protein / proteinTarget) * 100), 100)
       }))
     }
+  },
+
+  copyShareText() {
+    wx.setClipboardData({
+      data: this.data.shareText,
+      success: () => wx.showToast({ title: '打卡文案已复制' })
+    })
   },
 
   loadAIInsight() {
