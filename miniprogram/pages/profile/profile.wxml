@@ -14,6 +14,16 @@
     <view class="label">饮食偏好</view>
     <input class="input" data-field="preference" bindinput="onInput" value="{{preference}}" />
 
+    <view class="label">AI模型选择</view>
+    <view class="ai-selector">
+      <block wx:for="{{aiProviderOptions}}" wx:key="value">
+        <view class="ai-item {{aiProvider===item.value?'active':''}}" data-value="{{item.value}}" bindtap="selectAiProvider">
+          <view class="ai-name">{{item.label}}</view>
+          <view class="ai-desc">{{item.desc}}</view>
+        </view>
+      </block>
+    </view>
+
     <button class="btn" bindtap="saveProfile">保存</button>
   </view>
 </view>
