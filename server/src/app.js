@@ -4,6 +4,8 @@ require('dotenv').config()
 
 const recommendRoute = require('./routes/recommend')
 const authRoute = require('./routes/auth')
+const reminderRoute = require('./routes/reminder')
+const { startReminderJob } = require('./services/reminderService')
 
 const app = express()
 app.use(cors())
@@ -15,6 +17,9 @@ app.get('/', (req, res) => {
 
 app.use('/api/recommend', recommendRoute)
 app.use('/api/auth', authRoute)
+app.use('/api/reminder', reminderRoute)
+
+startReminderJob()
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
