@@ -2,21 +2,26 @@
   <view class="card">
     <view class="title">饮食记录</view>
 
-    <input class="input" placeholder="食物名称" data-field="foodName" bindinput="onInput" value="{{foodName}}" />
-    <input class="input" placeholder="热量(kcal)" data-field="calories" bindinput="onInput" value="{{calories}}" />
+    <view class="label">选择食物</view>
+    <picker mode="selector" range="{{foodList}}" bindchange="onSelectFood">
+      <view class="input">{{foodName || '点击选择食物'}}</view>
+    </picker>
+
+    <input class="input" placeholder="重量(g)" data-field="grams" bindinput="onInput" value="{{grams}}" />
 
     <button class="btn" bindtap="addRecord">添加记录</button>
   </view>
 
   <view class="card">
     <view class="title">今日摄入</view>
-    <view>总热量：{{totalCalories}} kcal</view>
+    <view>热量：{{totalCalories}} kcal</view>
+    <view>蛋白质：{{totalProtein}} g</view>
   </view>
 
   <view class="card">
     <view class="title">记录列表</view>
     <view wx:for="{{records}}" wx:key="index">
-      {{item.foodName}} - {{item.calories}} kcal
+      {{item.foodName}} {{item.grams}}g - {{item.calories}} kcal
     </view>
   </view>
 </view>
