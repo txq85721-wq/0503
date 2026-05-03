@@ -8,8 +8,16 @@ router.post('/add', async (req, res) => {
 
   try {
     await pool.query(
-      'INSERT INTO records (openid, food_name, calories, protein) VALUES (?, ?, ?, ?)',
-      [openid, record.foodName, record.calories, record.protein]
+      'INSERT INTO records (openid, food_name, grams, calories, protein, source, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [
+        openid,
+        record.foodName,
+        record.grams || 0,
+        record.calories || 0,
+        record.protein || 0,
+        record.source || 'manual',
+        record.createdAt || new Date()
+      ]
     )
     res.json({ success: true })
   } catch (e) {
@@ -19,9 +27,10 @@ router.post('/add', async (req, res) => {
 
 router.get('/list', async (req, res) => {
   const { openid } = req.query
+  if (!openid) return res.status(400).json({ error: 'openid required' })
 
   try {
-    const [rows] = await pool.query('SELECT * FROM records WHERE openid = ?', [openid])
+    const [rows] = await pool.query('SELECT * FROM records WHERE openid = ? ORDER BY created_at DESC LIMIT 100', [openid])
     res.json(rows)
   } catch (e) {
     res.status(500).json({ error: 'db error' })
