@@ -1,5 +1,6 @@
 const { calculateNutrition, foodDB } = require('../../utils/foodDB')
 const { updateCheckin } = require('../../utils/checkin')
+const { login, getOpenid } = require('../../utils/auth')
 const app = getApp()
 
 Page({
@@ -10,7 +11,18 @@ Page({
     totalCalories: 0,
     totalProtein: 0,
     foodList: Object.keys(foodDB),
-    recognizing: false
+    recognizing: false,
+    saving: false,
+    loadingRecords: false
+  },
+
+  async ensureOpenid() {
+    let openid = getOpenid()
+    if (!openid) {
+      const res = await login()
+      openid = res.openid
+    }
+    return openid
   },
 
   onSelectFood(e) {
@@ -24,15 +36,13 @@ Page({
     this.setData({ [field]: e.detail.value })
   },
 
-  addRecord() {
+  async addRecord() {
     const { foodName, grams } = this.data
-    const ok = this.addFoodRecord(foodName, Number(grams), 'manual')
+    const ok = await this.addFoodRecord(foodName, Number(grams), 'manual')
     if (ok) updateCheckin()
   },
 
-  addFoodRecord(foodName, grams, source = 'manual') {
-    const { records } = this.data
-
+  async addFoodRecord(foodName, grams, source = 'manual') {
     if (!foodName || !grams) {
       wx.showToast({ title: '请输入完整', icon: 'none' })
       return false
@@ -44,7 +54,7 @@ Page({
       return false
     }
 
-    const newRecord = {
+    const record = {
       foodName,
       grams: Number(grams),
       calories: nutrition.calories,
@@ -53,18 +63,75 @@ Page({
       createdAt: new Date().toISOString()
     }
 
-    const newRecords = [...records, newRecord]
-    this.refreshRecords(newRecords)
+    try {
+      this.setData({ saving: true })
+      const openid = await this.ensureOpenid()
 
-    this.setData({ foodName: '', grams: '' })
-    wx.setStorageSync('records', newRecords)
-    return true
+      await new Promise((resolve, reject) => {
+        wx.request({
+          url: `${app.globalData.apiBaseUrl}/record/add`,
+          method: 'POST',
+          data: { openid, record },
+          header: { 'content-type': 'application/json' },
+          success: (res) => {
+            if (res.statusCode >= 200 && res.statusCode < 300) resolve(res.data)
+            else reject(new Error(res.data?.error || '保存失败'))
+          },
+          fail: reject
+        })
+      })
+
+      this.setData({ foodName: '', grams: '' })
+      await this.loadRecords()
+      return true
+    } catch (e) {
+      wx.showToast({ title: '保存失败', icon: 'none' })
+      return false
+    } finally {
+      this.setData({ saving: false })
+    }
+  },
+
+  normalizeRecord(row) {
+    return {
+      foodName: row.foodName || row.food_name,
+      grams: row.grams || 0,
+      calories: Number(row.calories || 0),
+      protein: Number(row.protein || 0),
+      source: row.source || '',
+      createdAt: row.createdAt || row.created_at
+    }
   },
 
   refreshRecords(records) {
-    const totalCalories = records.reduce((sum, r) => sum + Number(r.calories || 0), 0)
-    const totalProtein = records.reduce((sum, r) => sum + Number(r.protein || 0), 0)
-    this.setData({ records, totalCalories, totalProtein })
+    const normalized = records.map(this.normalizeRecord)
+    const totalCalories = normalized.reduce((sum, r) => sum + Number(r.calories || 0), 0)
+    const totalProtein = normalized.reduce((sum, r) => sum + Number(r.protein || 0), 0)
+    this.setData({ records: normalized, totalCalories, totalProtein })
+  },
+
+  async loadRecords() {
+    try {
+      this.setData({ loadingRecords: true })
+      const openid = await this.ensureOpenid()
+
+      wx.request({
+        url: `${app.globalData.apiBaseUrl}/record/list`,
+        method: 'GET',
+        data: { openid },
+        success: (res) => {
+          if (res.statusCode >= 200 && res.statusCode < 300) {
+            this.refreshRecords(res.data || [])
+          }
+        },
+        complete: () => {
+          this.setData({ loadingRecords: false })
+        }
+      })
+    } catch (e) {
+      this.setData({ loadingRecords: false })
+      wx.showToast({ title: '加载记录失败', icon: 'none' })
+    }
   },
 
   takePhoto() {
@@ -85,7 +152,7 @@ Page({
       url: `${app.globalData.apiBaseUrl}/recognize`,
       filePath,
       name: 'image',
-      success: (uploadRes) => {
+      success: async (uploadRes) => {
         try {
           const data = JSON.parse(uploadRes.data)
           const foods = data.foods || []
@@ -96,13 +163,12 @@ Page({
           }
 
           let addedCount = 0
-          foods.forEach(food => {
-            const ok = this.addFoodRecord(food.name, food.grams || 100, 'photo')
+          for (const food of foods) {
+            const ok = await this.addFoodRecord(food.name, food.grams || 100, 'photo')
             if (ok) addedCount += 1
-          })
+          }
 
           if (addedCount > 0) updateCheckin()
-
           wx.showToast({ title: `已记录${addedCount}项` })
         } catch (err) {
           wx.showToast({ title: '识别结果异常', icon: 'none' })
@@ -118,12 +184,10 @@ Page({
   },
 
   onLoad() {
-    const records = wx.getStorageSync('records') || []
-    this.refreshRecords(records)
+    this.loadRecords()
   },
 
   onShow() {
-    const records = wx.getStorageSync('records') || []
-    this.refreshRecords(records)
+    this.loadRecords()
   }
 })
