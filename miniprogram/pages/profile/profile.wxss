@@ -1,0 +1,28 @@
+.ai-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.ai-item {
+  border: 1px solid #e5e7eb;
+  padding: 20rpx;
+  border-radius: 16rpx;
+  background: #fff;
+}
+
+.ai-item.active {
+  border-color: #16a34a;
+  background: #f0fdf4;
+}
+
+.ai-name {
+  font-weight: bold;
+  font-size: 28rpx;
+}
+
+.ai-desc {
+  font-size: 24rpx;
+  color: #64748b;
+  margin-top: 8rpx;
+}
