@@ -1,6 +1,6 @@
 page {
-  background: #f6f7f9;
-  color: #1f2933;
+  background: linear-gradient(180deg, #ecfdf5 0%, #f8fafc 42%, #f6f7f9 100%);
+  color: #172033;
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
 }
 
@@ -8,24 +8,48 @@ page {
   padding: 32rpx;
 }
 
+.hero-card {
+  background: linear-gradient(135deg, #16a34a 0%, #22c55e 55%, #86efac 100%);
+  color: #ffffff;
+  border-radius: 36rpx;
+  padding: 40rpx 34rpx;
+  margin-bottom: 28rpx;
+  box-shadow: 0 18rpx 42rpx rgba(22, 163, 74, 0.28);
+}
+
 .card {
-  background: #ffffff;
-  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: 30rpx;
   padding: 32rpx;
-  margin-bottom: 24rpx;
-  box-shadow: 0 8rpx 24rpx rgba(15, 23, 42, 0.06);
+  margin-bottom: 26rpx;
+  box-shadow: 0 12rpx 34rpx rgba(15, 23, 42, 0.08);
+  border: 1rpx solid rgba(226, 232, 240, 0.9);
 }
 
 .title {
-  font-size: 40rpx;
-  font-weight: 700;
+  font-size: 42rpx;
+  font-weight: 800;
   margin-bottom: 12rpx;
+  letter-spacing: -1rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 800;
+  margin-bottom: 20rpx;
+  color: #0f172a;
 }
 
 .subtitle {
   color: #64748b;
   font-size: 26rpx;
-  line-height: 1.6;
+  line-height: 1.7;
+}
+
+.hero-subtitle {
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 26rpx;
+  line-height: 1.7;
 }
 
 .btn {
@@ -33,17 +57,114 @@ page {
   color: #ffffff;
   border-radius: 999rpx;
   margin-top: 24rpx;
+  box-shadow: 0 10rpx 22rpx rgba(22, 163, 74, 0.22);
+}
+
+.btn-secondary {
+  background: #f0fdf4;
+  color: #15803d;
+  border-radius: 999rpx;
+  margin-top: 20rpx;
 }
 
 .input {
   background: #f8fafc;
-  border-radius: 16rpx;
-  padding: 22rpx;
+  border-radius: 20rpx;
+  padding: 24rpx;
   margin: 16rpx 0;
+  border: 1rpx solid #e2e8f0;
 }
 
 .label {
   font-size: 26rpx;
   color: #475569;
   margin-top: 18rpx;
+  font-weight: 600;
+}
+
+.dashboard-grid {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 26rpx;
+}
+
+.metric-card {
+  flex: 1;
+  background: #ffffff;
+  border-radius: 26rpx;
+  padding: 26rpx 20rpx;
+  box-shadow: 0 8rpx 24rpx rgba(15, 23, 42, 0.07);
+}
+
+.metric-label {
+  color: #64748b;
+  font-size: 24rpx;
+  margin-bottom: 10rpx;
+}
+
+.metric-value {
+  color: #0f172a;
+  font-size: 38rpx;
+  font-weight: 800;
+}
+
+.hero-metric-value {
+  color: #ffffff;
+  font-size: 56rpx;
+  font-weight: 900;
+  margin-top: 18rpx;
+}
+
+.progress-track {
+  height: 18rpx;
+  background: rgba(255, 255, 255, 0.28);
+  border-radius: 999rpx;
+  overflow: hidden;
+  margin-top: 24rpx;
+}
+
+.progress-fill {
+  height: 18rpx;
+  background: #ffffff;
+  border-radius: 999rpx;
+}
+
+.meal-card {
+  background: #f8fafc;
+  border-radius: 24rpx;
+  padding: 24rpx;
+  margin-top: 18rpx;
+  border: 1rpx solid #e2e8f0;
+}
+
+.meal-title {
+  font-size: 28rpx;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 8rpx;
+}
+
+.reason, .tip, .warning, .shopping-item {
+  color: #64748b;
+  font-size: 25rpx;
+  line-height: 1.7;
+  margin-top: 8rpx;
+}
+
+.category {
+  font-size: 28rpx;
+  font-weight: 800;
+  color: #15803d;
+  margin-top: 20rpx;
+}
+
+.pill {
+  display: inline-block;
+  padding: 8rpx 18rpx;
+  border-radius: 999rpx;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 24rpx;
+  margin-right: 12rpx;
+  margin-top: 10rpx;
 }
