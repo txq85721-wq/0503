@@ -1,12 +1,67 @@
 <view class="container">
   <view class="card">
-    <view class="title">AI饮食推荐</view>
-    <button class="btn" bindtap="generatePlan">生成今日菜单</button>
+    <view class="title">AI 一周饮食计划</view>
+    <view class="subtitle">基于健康档案生成控糖、均衡、可执行的菜单和采购清单。</view>
+    <button class="btn" loading="{{loading}}" bindtap="generatePlan">生成一周菜单</button>
+  </view>
 
-    <view wx:if="{{plan}}">
-      <view>早餐：{{plan.breakfast}}</view>
-      <view>午餐：{{plan.lunch}}</view>
-      <view>晚餐：{{plan.dinner}}</view>
+  <view wx:if="{{plan}}">
+    <view class="card">
+      <view class="section-title">计划概览</view>
+      <view class="summary">{{plan.summary}}</view>
+      <view class="metric">目标：{{plan.target}}</view>
+      <view class="metric">每日热量目标：{{plan.daily_calorie_target}} kcal</view>
+      <view class="metric">蛋白质：{{plan.nutrition_targets.protein_g}} g</view>
+      <view class="metric">糖摄入上限：{{plan.nutrition_targets.sugar_limit_g}} g</view>
+    </view>
+
+    <view class="card" wx:for="{{plan.days}}" wx:key="day">
+      <view class="day-title">{{item.day}}</view>
+
+      <view class="meal">
+        <view class="meal-title">早餐 · {{item.breakfast.estimated_calories}} kcal</view>
+        <view>{{item.breakfast.name}}</view>
+        <view class="reason">{{item.breakfast.reason}}</view>
+      </view>
+
+      <view class="meal">
+        <view class="meal-title">午餐 · {{item.lunch.estimated_calories}} kcal</view>
+        <view>{{item.lunch.name}}</view>
+        <view class="reason">{{item.lunch.reason}}</view>
+      </view>
+
+      <view class="meal">
+        <view class="meal-title">晚餐 · {{item.dinner.estimated_calories}} kcal</view>
+        <view>{{item.dinner.name}}</view>
+        <view class="reason">{{item.dinner.reason}}</view>
+      </view>
+
+      <view class="meal">
+        <view class="meal-title">加餐 · {{item.snack.estimated_calories}} kcal</view>
+        <view>{{item.snack.name}}</view>
+        <view class="reason">{{item.snack.reason}}</view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="section-title">采购清单</view>
+      <view wx:for="{{plan.shopping_list}}" wx:key="category">
+        <view class="category">{{item.category}}</view>
+        <view wx:for="{{item.items}}" wx:for-item="food" wx:key="name" class="shopping-item">
+          {{food.name}} · {{food.amount}}
+          <view class="reason">{{food.buying_tip}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="section-title">控糖建议</view>
+      <view wx:for="{{plan.sugar_control_tips}}" wx:key="*this" class="tip">{{item}}</view>
+    </view>
+
+    <view class="card" wx:if="{{plan.warnings.length}}">
+      <view class="section-title">注意事项</view>
+      <view wx:for="{{plan.warnings}}" wx:key="*this" class="warning">{{item}}</view>
     </view>
   </view>
 </view>
