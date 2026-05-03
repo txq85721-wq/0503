@@ -26,8 +26,13 @@
   </view>
 
   <view class="card">
-    <view class="section-title">AI建议</view>
-    <view class="tip">{{advice}}</view>
+    <view class="section-title">AI分析</view>
+    <view class="tip">{{aiSummary}}</view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">晚餐建议</view>
+    <view class="tip">{{dinnerSuggestion}}</view>
   </view>
 
   <view class="card">
