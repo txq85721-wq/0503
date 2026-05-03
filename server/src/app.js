@@ -8,6 +8,7 @@ const reminderRoute = require('./routes/reminder')
 const insightRoute = require('./routes/insight')
 const prepRoute = require('./routes/prep')
 const recognizeRoute = require('./routes/recognize')
+const recordRoute = require('./routes/record')
 const { startReminderJob } = require('./services/reminderService')
 
 const app = express()
@@ -24,6 +25,7 @@ app.use('/api/reminder', reminderRoute)
 app.use('/api/insight', insightRoute)
 app.use('/api/prep', prepRoute)
 app.use('/api/recognize', recognizeRoute)
+app.use('/api/record', recordRoute)
 
 startReminderJob()
 
