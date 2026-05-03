@@ -12,7 +12,15 @@ const recordRoute = require('./routes/record')
 const { startReminderJob } = require('./services/reminderService')
 
 const app = express()
-app.use(cors({ origin: '*' }))
+
+const whitelist = (process.env.CORS_ORIGIN || '').split(',').filter(Boolean)
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || whitelist.includes(origin)) return callback(null, true)
+    callback(new Error('Not allowed by CORS'))
+  }
+}))
+
 app.use(express.json())
 
 app.get('/', (req, res) => {
