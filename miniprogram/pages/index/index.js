@@ -1,5 +1,9 @@
 const { login, getOpenid } = require('../../utils/auth')
 
+function getAiProvider() {
+  return wx.getStorageSync('aiProvider') || 'deepseek'
+}
+
 Page({
   data: {
     todayCalories: 0,
@@ -93,7 +97,12 @@ Page({
     wx.request({
       url: `${getApp().globalData.apiBaseUrl}/insight/daily`,
       method: 'POST',
-      data: { totalCalories, targetCalories, totalProtein },
+      data: {
+        totalCalories,
+        targetCalories,
+        totalProtein,
+        aiProvider: getAiProvider()
+      },
       header: { 'content-type': 'application/json' },
       success: (res) => {
         this.setData({
