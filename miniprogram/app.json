@@ -6,6 +6,32 @@
     "pages/profile/profile"
   ],
   "window": {
-    "navigationBarTitleText": "LESSugar"
+    "navigationBarTitleText": "LESSugar",
+    "navigationBarBackgroundColor": "#16a34a",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#64748b",
+    "selectedColor": "#16a34a",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/recommend/recommend",
+        "text": "推荐"
+      },
+      {
+        "pagePath": "pages/record/record",
+        "text": "记录"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ]
   }
 }
