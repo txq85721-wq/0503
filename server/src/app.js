@@ -7,10 +7,11 @@ const authRoute = require('./routes/auth')
 const reminderRoute = require('./routes/reminder')
 const insightRoute = require('./routes/insight')
 const prepRoute = require('./routes/prep')
+const recognizeRoute = require('./routes/recognize')
 const { startReminderJob } = require('./services/reminderService')
 
 const app = express()
-app.use(cors())
+app.use(cors({ origin: '*' }))
 app.use(express.json())
 
 app.get('/', (req, res) => {
@@ -22,6 +23,7 @@ app.use('/api/auth', authRoute)
 app.use('/api/reminder', reminderRoute)
 app.use('/api/insight', insightRoute)
 app.use('/api/prep', prepRoute)
+app.use('/api/recognize', recognizeRoute)
 
 startReminderJob()
 
