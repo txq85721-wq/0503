@@ -13,6 +13,12 @@ Page({
     familySize: '',
     familyMembers: '',
     restrictions: '',
+    aiProvider: 'deepseek',
+    aiProviderOptions: [
+      { label: 'DeepSeek', value: 'deepseek', desc: '适合中文饮食分析和菜单规划' },
+      { label: 'ChatGPT', value: 'chatgpt', desc: '适合更自然的建议和解释' },
+      { label: '千问', value: 'qwen', desc: '适合中文场景，可与图像识别生态配合' }
+    ],
     saving: false
   },
 
@@ -28,6 +34,13 @@ Page({
   onInput(e) {
     const field = e.currentTarget.dataset.field
     this.setData({ [field]: e.detail.value })
+  },
+
+  selectAiProvider(e) {
+    const value = e.currentTarget.dataset.value
+    this.setData({ aiProvider: value })
+    wx.setStorageSync('aiProvider', value)
+    wx.showToast({ title: 'AI模型已切换' })
   },
 
   async saveProfile() {
@@ -48,6 +61,7 @@ Page({
       }
 
       wx.setStorageSync('profile', profile)
+      wx.setStorageSync('aiProvider', this.data.aiProvider)
 
       wx.request({
         url: `${app.globalData.apiBaseUrl}/profile/save`,
@@ -72,6 +86,8 @@ Page({
 
   onLoad() {
     const data = wx.getStorageSync('profile')
+    const aiProvider = wx.getStorageSync('aiProvider') || 'deepseek'
     if (data) this.setData(data)
+    this.setData({ aiProvider })
   }
 })
