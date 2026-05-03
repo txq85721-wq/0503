@@ -1,0 +1,4 @@
+<view>
+  <text>今日摄入热量：{{todayCalories}}</text>
+  <text>剩余可摄入：{{remainingCalories}}</text>
+</view>
