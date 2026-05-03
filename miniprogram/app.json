@@ -2,6 +2,7 @@
   "pages": [
     "pages/index/index",
     "pages/recommend/recommend",
+    "pages/record/record",
     "pages/profile/profile"
   ],
   "window": {
