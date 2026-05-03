@@ -1,5 +1,9 @@
 const { request } = require('../../utils/request')
 
+function getAiProvider() {
+  return wx.getStorageSync('aiProvider') || 'deepseek'
+}
+
 Page({
   data: {
     plan: null,
@@ -19,7 +23,10 @@ Page({
       const result = await request({
         url: '/recommend',
         method: 'POST',
-        data: profile
+        data: {
+          ...profile,
+          aiProvider: getAiProvider()
+        }
       })
 
       this.setData({ plan: result })
