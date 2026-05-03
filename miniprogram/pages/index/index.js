@@ -45,12 +45,13 @@ Page({
     const targetCalories = plan.daily_calorie_target || 1800
 
     wx.request({
-      url: `${getApp().globalData.apiBaseUrl}/record/list`,
+      url: `${getApp().globalData.apiBaseUrl}/record/today`,
       data: { openid },
       success: (res) => {
-        const records = res.data || []
-        const todayCalories = records.reduce((sum, r) => sum + Number(r.calories || 0), 0)
-        const totalProtein = records.reduce((sum, r) => sum + Number(r.protein || 0), 0)
+        const records = res.data?.records || []
+        const summary = res.data?.summary || {}
+        const todayCalories = Number(summary.calories || 0)
+        const totalProtein = Number(summary.protein || 0)
         const remainingCalories = targetCalories - todayCalories
         const progressPercent = Math.min(100, Math.round((todayCalories / targetCalories) * 100))
 
