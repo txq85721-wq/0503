@@ -1,0 +1,22 @@
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  openid VARCHAR(64) UNIQUE,
+  reminder_enabled TINYINT DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS records (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  openid VARCHAR(64),
+  food_name VARCHAR(255),
+  calories FLOAT,
+  protein FLOAT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX(openid)
+);
+
+CREATE TABLE IF NOT EXISTS checkins (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  openid VARCHAR(64) UNIQUE,
+  streak INT DEFAULT 0,
+  last_date DATE
+);
