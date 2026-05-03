@@ -1,0 +1,10 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/recommend/recommend",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "navigationBarTitleText": "LESSugar"
+  }
+}
