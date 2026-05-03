@@ -1,4 +1,5 @@
 const { calculateNutrition, foodDB } = require('../../utils/foodDB')
+const { updateCheckin } = require('../../utils/checkin')
 const app = getApp()
 
 Page({
@@ -25,7 +26,8 @@ Page({
 
   addRecord() {
     const { foodName, grams } = this.data
-    this.addFoodRecord(foodName, Number(grams), 'manual')
+    const ok = this.addFoodRecord(foodName, Number(grams), 'manual')
+    if (ok) updateCheckin()
   },
 
   addFoodRecord(foodName, grams, source = 'manual') {
@@ -98,6 +100,8 @@ Page({
             const ok = this.addFoodRecord(food.name, food.grams || 100, 'photo')
             if (ok) addedCount += 1
           })
+
+          if (addedCount > 0) updateCheckin()
 
           wx.showToast({ title: `已记录${addedCount}项` })
         } catch (err) {
