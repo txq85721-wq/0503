@@ -1,4 +1,18 @@
-<view>
-  <text>今日摄入热量：{{todayCalories}}</text>
-  <text>剩余可摄入：{{remainingCalories}}</text>
+<view class="container">
+  <view class="card">
+    <view class="title">今日状态</view>
+    <view>目标热量：{{targetCalories}} kcal</view>
+    <view>已摄入：{{todayCalories}} kcal</view>
+    <view>剩余：{{remainingCalories}} kcal</view>
+  </view>
+
+  <view class="card">
+    <view class="title">AI建议</view>
+    <view>{{advice}}</view>
+  </view>
+
+  <view class="card">
+    <button class="btn" open-type="navigate" url="/pages/record/record">去记录饮食</button>
+    <button class="btn" open-type="navigate" url="/pages/recommend/recommend">查看推荐</button>
+  </view>
 </view>
